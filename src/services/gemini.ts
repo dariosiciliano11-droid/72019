@@ -2,10 +2,11 @@ import { GoogleGenAI } from "@google/genai";
 import { MeetingData } from "../types";
 
 export async function generateVerbale(data: MeetingData): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  // Try both process.env and import.meta.env (Vite)
+  const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
   
   if (!apiKey || apiKey === 'undefined' || apiKey === '') {
-    throw new Error("Chiave API di Gemini mancante. Configura GEMINI_API_KEY nelle variabili d'ambiente di Vercel.");
+    throw new Error("Chiave API di Gemini mancante. Assicurati di aver configurato GEMINI_API_KEY nelle impostazioni di Vercel.");
   }
 
   const ai = new GoogleGenAI({ apiKey });

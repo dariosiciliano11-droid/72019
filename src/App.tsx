@@ -5,7 +5,7 @@ import { Logo } from './components/Logo';
 import { MeetingData } from './types';
 import { generateVerbale } from './services/gemini';
 import { motion, AnimatePresence } from 'motion/react';
-import { FileText, Sparkles, History, Trash2 } from 'lucide-react';
+import { FileText, Sparkles, History, Trash2, AlertCircle } from 'lucide-react';
 
 interface SavedVerbale {
   id: string;
@@ -20,8 +20,14 @@ export default function App() {
   const [error, setError] = React.useState<string | null>(null);
   const [history, setHistory] = React.useState<SavedVerbale[]>([]);
   const [showHistory, setShowHistory] = React.useState(false);
+  const [apiKeyMissing, setApiKeyMissing] = React.useState(false);
 
   React.useEffect(() => {
+    const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+    if (!apiKey || apiKey === 'undefined' || apiKey === '') {
+      setApiKeyMissing(true);
+    }
+    
     const saved = localStorage.getItem('verbale_history');
     if (saved) {
       setHistory(JSON.parse(saved));
@@ -58,8 +64,9 @@ export default function App() {
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       }, 100);
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Si è verificato un errore durante la generazione. Riprova.");
+      console.error("Generation Error:", err);
+      const message = err.message || "Errore sconosciuto";
+      setError(`Errore di generazione: ${message}. Se sei su Vercel, verifica di aver impostato GEMINI_API_KEY.`);
     } finally {
       setIsLoading(false);
     }
@@ -91,6 +98,15 @@ export default function App() {
       </header>
 
       <main className="max-w-5xl mx-auto px-6 pt-12 space-y-12 print:p-0 print:m-0 print:max-w-none">
+        {apiKeyMissing && (
+          <div className="max-w-3xl mx-auto bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-start gap-3 text-amber-800 shadow-sm">
+            <AlertCircle className="shrink-0 mt-0.5" size={18} />
+            <div className="text-sm">
+              <p className="font-bold">Configurazione Incompleta</p>
+              <p>La chiave API di Gemini non è stata trovata. Se hai appena configurato la variabile <code className="bg-amber-100 px-1 rounded">GEMINI_API_KEY</code> su Vercel, assicurati di aver effettuato un nuovo <strong>Redeploy</strong>.</p>
+            </div>
+          </div>
+        )}
         {showHistory ? (
           <motion.section 
             initial={{ opacity: 0, y: 10 }}
