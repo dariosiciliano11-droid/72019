@@ -92,13 +92,19 @@ export async function generateVerbale(data: MeetingData): Promise<string> {
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3.1-pro-preview",
+      model: "gemini-3-flash-preview",
       contents: prompt,
     });
 
     return response.text || "Errore: Il modello non ha restituito alcun testo.";
   } catch (error: any) {
     console.error("Gemini API Error:", error);
+    
+    const errorString = JSON.stringify(error);
+    if (errorString.includes("RESOURCE_EXHAUSTED") || error.status === "RESOURCE_EXHAUSTED") {
+      throw new Error("Quota esaurita per oggi o troppe richieste ravvicinate. Per favore, riprova tra un minuto.");
+    }
+    
     if (error.message?.includes("API_KEY_INVALID")) {
       throw new Error("La Chiave API fornita non è valida.");
     }
