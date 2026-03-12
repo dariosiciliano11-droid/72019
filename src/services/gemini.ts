@@ -58,7 +58,7 @@ export async function generateVerbale(data: MeetingData): Promise<string> {
     14. NON utilizzare mai underscore (_) o linee tratteggiate per le firme del Presidente e del Segretario. Riporta solo i titoli e i nomi in modo testuale.
     15. All'inizio del verbale, quando indichi il luogo della riunione, usa la preposizione "presso" invece di "a" (es. "si è riunito presso [Luogo]" invece di "si è riunito a [Luogo]").
     16. Aggiungi uno spazio significativo (almeno due righe vuote) prima delle firme finali del Presidente e del Segretario per separarle nettamente dal testo della chiusura.
-    17. Dopo la frase "Costatata la piena validità della seduta e la regolarità della convocazione, il Presidente dichiara aperta la riunione per la trattazione del seguente ordine del giorno", inserisci un elenco puntato che riepiloghi tutti i punti dell'ordine del giorno prima di procedere con la trattazione dettagliata di ciascuno.
+    17. Dopo la frase "Costatata la piena validità della seduta e la regolarità della convocazione, il Presidente dichiara aperta la riunione per la trattazione del seguente ordine del giorno", inserisci IMMEDIATAMENTE (senza righe vuote aggiuntive) un elenco puntato che riepiloghi tutti i punti dell'ordine del giorno.
 
     Esempio di struttura:
     # VERBALE DEL CONSIGLIO DIRETTIVO NUMERO [Numero Verbale]

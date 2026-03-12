@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Copy, Check, Download, FileText, Printer, FileDown } from 'lucide-react';
+import { Copy, Check, Download, FileText, FileDown } from 'lucide-react';
 import { motion } from 'motion/react';
 import { exportToDocx } from '../utils/docxExport';
 
@@ -10,7 +10,6 @@ interface VerbalePreviewProps {
 
 export const VerbalePreview: React.FC<VerbalePreviewProps> = ({ content }) => {
   const [copied, setCopied] = React.useState(false);
-  const [printError, setPrintError] = React.useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
@@ -30,30 +29,6 @@ export const VerbalePreview: React.FC<VerbalePreviewProps> = ({ content }) => {
   const handleDownloadDocx = async () => {
     const filename = `verbale_72019_${new Date().toISOString().split('T')[0]}`;
     await exportToDocx(content, filename);
-  };
-
-  const handlePrint = () => {
-    try {
-      // Set document title so the print dialog shows a nice name
-      const originalTitle = document.title;
-      const firstLine = content.split('\n')[0].replace('#', '').trim();
-      document.title = firstLine || 'Verbale Associazione 72019';
-      
-      window.print();
-      
-      // Restore title
-      setTimeout(() => {
-        document.title = originalTitle;
-      }, 1000);
-    } catch (err) {
-      console.error("Print error:", err);
-      setPrintError(true);
-      setTimeout(() => setPrintError(false), 5000);
-    }
-  };
-
-  const handleDownloadPdf = () => {
-    handlePrint();
   };
 
   return (
@@ -77,28 +52,12 @@ export const VerbalePreview: React.FC<VerbalePreviewProps> = ({ content }) => {
             {copied ? 'Copiato!' : 'Copia'}
           </button>
           <button
-            onClick={handlePrint}
-            className={`p-2 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium ${printError ? 'bg-amber-50 text-amber-700' : 'hover:bg-stone-100 text-stone-600'}`}
-            title={printError ? "Funzione bloccata dal browser" : "Stampa"}
-          >
-            <Printer size={18} />
-            {printError ? 'Usa Word o apri in nuova scheda' : 'Stampa'}
-          </button>
-          <button
             onClick={handleDownloadDocx}
             className="p-2 bg-stone-900 text-white hover:bg-stone-800 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
             title="Scarica come Word (.docx) - Compatibile con Apple Pages"
           >
             <FileDown size={18} />
             Word (.docx)
-          </button>
-          <button
-            onClick={handleDownloadPdf}
-            className="p-2 hover:bg-stone-100 rounded-lg transition-colors text-stone-600 flex items-center gap-2 text-sm font-medium"
-            title="Scarica come PDF"
-          >
-            <Download size={18} />
-            PDF
           </button>
           <button
             onClick={handleDownloadMd}

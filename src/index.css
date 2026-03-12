@@ -23,7 +23,11 @@ body {
 }
 
 .markdown-body h2 {
-  @apply text-xl font-sans font-semibold mt-10 mb-4 text-stone-800;
+  @apply text-xl font-sans font-semibold mt-6 mb-3 text-stone-800;
+}
+
+.markdown-body h3 {
+  @apply text-lg font-sans font-semibold mt-4 mb-2 text-stone-800;
 }
 
 .markdown-body p {
@@ -31,7 +35,7 @@ body {
 }
 
 .markdown-body ul {
-  @apply list-disc pl-6 mb-6 space-y-2;
+  @apply list-disc pl-6 mb-4 space-y-1;
 }
 
 .markdown-body li {
