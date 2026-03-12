@@ -1,9 +1,15 @@
 import { GoogleGenAI } from "@google/genai";
 import { MeetingData } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
 export async function generateVerbale(data: MeetingData): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  
+  if (!apiKey || apiKey === 'undefined' || apiKey === '') {
+    throw new Error("Chiave API di Gemini mancante. Configura GEMINI_API_KEY nelle variabili d'ambiente di Vercel.");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+  
   const prompt = `
     Sei un assistente esperto nella redazione di verbali formali per associazioni no-profit.
     Il tuo compito è redigere il verbale ufficiale di una riunione del Consiglio Direttivo dell'Associazione della Città del 2019.
@@ -83,10 +89,18 @@ export async function generateVerbale(data: MeetingData): Promise<string> {
     Esauriti i punti all'ordine del giorno, il Presidente dichiara formalmente chiusa la seduta alle ore [Ora Fine].
   `;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3.1-pro-preview",
-    contents: prompt,
-  });
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3.1-pro-preview",
+      contents: prompt,
+    });
 
-  return response.text || "Errore nella generazione del verbale.";
+    return response.text || "Errore: Il modello non ha restituito alcun testo.";
+  } catch (error: any) {
+    console.error("Gemini API Error:", error);
+    if (error.message?.includes("API_KEY_INVALID")) {
+      throw new Error("La Chiave API fornita non è valida.");
+    }
+    throw error;
+  }
 }

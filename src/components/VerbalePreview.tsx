@@ -52,6 +52,10 @@ export const VerbalePreview: React.FC<VerbalePreviewProps> = ({ content }) => {
     }
   };
 
+  const handleDownloadPdf = () => {
+    handlePrint();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -83,10 +87,18 @@ export const VerbalePreview: React.FC<VerbalePreviewProps> = ({ content }) => {
           <button
             onClick={handleDownloadDocx}
             className="p-2 bg-stone-900 text-white hover:bg-stone-800 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
-            title="Scarica come Word (.docx)"
+            title="Scarica come Word (.docx) - Compatibile con Apple Pages"
           >
             <FileDown size={18} />
             Word (.docx)
+          </button>
+          <button
+            onClick={handleDownloadPdf}
+            className="p-2 hover:bg-stone-100 rounded-lg transition-colors text-stone-600 flex items-center gap-2 text-sm font-medium"
+            title="Scarica come PDF"
+          >
+            <Download size={18} />
+            PDF
           </button>
           <button
             onClick={handleDownloadMd}

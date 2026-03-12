@@ -57,9 +57,9 @@ export default function App() {
       setTimeout(() => {
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       }, 100);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setError("Si è verificato un errore durante la generazione. Riprova.");
+      setError(err.message || "Si è verificato un errore durante la generazione. Riprova.");
     } finally {
       setIsLoading(false);
     }
